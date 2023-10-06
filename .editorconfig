@@ -1,0 +1,23 @@
+
+[*]
+
+# Microsoft .NET properties
+csharp_indent_braces = false
+csharp_new_line_before_open_brace = control_blocks
+csharp_style_expression_bodied_accessors = true:suggestion
+csharp_style_expression_bodied_constructors = true:none
+csharp_style_expression_bodied_methods = true:none
+csharp_style_expression_bodied_properties = true:suggestion
+
+# ReSharper properties
+resharper_align_multiline_calls_chain = true
+resharper_csharp_case_block_braces = end_of_line
+resharper_csharp_empty_block_style = together
+resharper_indent_nested_fixed_stmt = true
+resharper_indent_nested_foreach_stmt = true
+resharper_indent_nested_for_stmt = true
+resharper_indent_nested_lock_stmt = true
+resharper_indent_nested_usings_stmt = true
+resharper_indent_nested_while_stmt = true
+resharper_local_function_body = expression_body
+resharper_outdent_statement_labels = true
