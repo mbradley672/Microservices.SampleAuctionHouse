@@ -1,0 +1,1 @@
+docker buildx build -f .\src\AuctionService\Dockerfile -t testing123 .
