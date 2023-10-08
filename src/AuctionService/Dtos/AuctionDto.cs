@@ -8,6 +8,8 @@ public class AuctionDto
     public Guid Id { get; set; }
     [Required] public DateTime CreatedAt { get; set; }
     [Required] public DateTime UpdatedAt { get; set; }
+    [Required] public DateTime AuctionEnd { get; set; }
+    
     [Required] public string Seller { get; set; } 
     [Required] public string Winner { get; set; } 
     [Required] public string Make { get; set; }  

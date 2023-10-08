@@ -11,14 +11,18 @@ public class SearchController: ControllerBase {
         
     }
 
-    [HttpGet()]
+    [HttpGet]
     public async Task<ActionResult<List<Item>>> SearchItems([FromQuery]SearchParams searchParams) {
         var query = DB.PagedSearch<Item, Item>();
-
+        
+        query.PageNumber(searchParams.PageNumber);
+        query.PageSize(searchParams.PageSize);
+        
         if (searchParams.SearchTerm is not null or "")
         {
             query.Match(Search.Full, searchParams.SearchTerm).SortByTextScore();
         }
+        //var test = await query.ExecuteAsync();
 
         query = searchParams.OrderBy switch {
             "make" => query.Sort(x => x.Ascending(c => c.Make)),
@@ -26,11 +30,15 @@ public class SearchController: ControllerBase {
             _ => query.Sort(x => x.Ascending(a => a.AuctionEnd))
         };
 
+        //var sortTesting = await query.ExecuteAsync();
+
         query = searchParams.FilterBy switch {
             "finished" => query.Match(x => x.AuctionEnd < DateTime.UtcNow),
             "endingSoon" => query.Match(x => x.AuctionEnd < DateTime.UtcNow.Add(new TimeSpan(5, 0, 0, 0)) && x.AuctionEnd > DateTime.UtcNow),
-            _ => query.Match(x=>x.AuctionEnd > DateTime.UtcNow)
+            _ => query.Match(x=>x.AuctionEnd > DateTime.UtcNow) // Change for production must be >
         };
+        
+        //var dateTesting = await query.ExecuteAsync();
 
         if (searchParams.Seller is not null or "")
         {
@@ -41,9 +49,6 @@ public class SearchController: ControllerBase {
         {
             query.Match(x => x.Winner == searchParams.Winner);
         }
-
-        query.PageNumber(searchParams.PageNumber);
-        query.PageSize(searchParams.PageSize);
 
         var result = await query.ExecuteAsync();
 
