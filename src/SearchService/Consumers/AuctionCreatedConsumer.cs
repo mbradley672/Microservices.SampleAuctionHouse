@@ -15,6 +15,8 @@ namespace SearchService.Consumers {
             Console.WriteLine("--> consuming AuctionCreatedContract: " + context.Message.Id);
 
             var item = _mapper.Map<Item>(context.Message);
+            
+            
 
             await item.SaveAsync();
         }

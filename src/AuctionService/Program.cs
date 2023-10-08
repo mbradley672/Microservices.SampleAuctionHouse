@@ -4,6 +4,7 @@ using AuctionService.Data;
 using AuctionService.Entities;
 using Microsoft.EntityFrameworkCore;
 using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace AuctionService
 {
@@ -33,6 +34,14 @@ namespace AuctionService
                 x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("auction", false));
             });
 
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                   .AddJwtBearer(options => {
+                       options.Authority = builder.Configuration["IdentityService:Uri"];
+                       options.RequireHttpsMetadata = false;
+                       options.TokenValidationParameters.ValidateAudience = false;
+                       options.TokenValidationParameters.NameClaimType = "username";
+                   });
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -46,12 +55,11 @@ namespace AuctionService
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 

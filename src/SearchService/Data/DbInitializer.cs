@@ -15,12 +15,16 @@ namespace SearchService.Data {
                     .Key(x => x.Model, KeyType.Text)
                     .Key(x => x.Color, KeyType.Text)
                     .CreateAsync();
+            
+            var count = await DB.CountAsync<Item>();
+            if (count == 0)
+            {
+                var itemData = await File.ReadAllBytesAsync("Data/auctions.json");
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var items = JsonSerializer.Deserialize<List<Item>>(itemData, options);
+                if (items != null) await DB.SaveAsync(items);
+            }
 
-            var itemData = await File.ReadAllBytesAsync("Data/auctions.json");
-            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var items = JsonSerializer.Deserialize<List<Item>>(itemData, options);
-
-            await DB.SaveAsync(items!);
         }
     }
 }

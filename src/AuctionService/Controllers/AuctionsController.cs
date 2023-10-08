@@ -8,6 +8,7 @@ using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using SearchService.Consumers;
 
 namespace AuctionService.Controllers;
@@ -25,14 +26,14 @@ public class AuctionsController: ControllerBase
         _publishEndpoint = publishEndpoint;
     }
 
-    [HttpGet]
+    [HttpGet, AllowAnonymous]
     public async Task<ActionResult<List<AuctionDto>>> GetAllAuctions() {
         var auctions = await _context.Auctions.Include(x => x.Item)
                                      .OrderBy(x => x.Item.Make).ToListAsync();
         return _mapper.Map<List<AuctionDto>>(auctions);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id}"),AllowAnonymous]
     public async Task<ActionResult<AuctionDto>> GetAuctionById(Guid id) {
         var auction = await _context.Auctions.Include(x => x.Item).SingleOrDefaultAsync(x => x.Id == id);
 
@@ -41,11 +42,11 @@ public class AuctionsController: ControllerBase
         return _mapper.Map<AuctionDto>(auction);
     }
 
-    [HttpPost]
+    [HttpPost, Authorize]
     public async Task<ActionResult<AuctionDto>> CreateAuction(CreateAuctionDto auctionDto) {
         var auction = _mapper.Map<Auction>(auctionDto);
         //TODO: Add Current user as seller
-        auction.Seller = "test";
+        if (User.Identity?.Name != null) auction.Seller = User.Identity.Name;
 
         _context.Auctions.Add(auction);
         var mappedAuction = _mapper.Map<AuctionDto>(auction);
@@ -61,12 +62,15 @@ public class AuctionsController: ControllerBase
                 new { auction.Id }, mappedAuction);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id}"), Authorize]
     public async Task<ActionResult> UpdateAuction(Guid id, UpdateAuctionDto updateAuctionDto) {
         var auction = await _context.Auctions.Include(x => x.Item).SingleOrDefaultAsync(x => x.Id == id);
         if (auction == null) return NotFound();
-        
-        //TODO: Check seller = username;
+
+        if (auction.Seller != User.Identity?.Name!)
+        {
+            return Forbid();
+        }
 
         auction.Item.Make = updateAuctionDto.Make ?? auction.Item.Make;
         auction.Item.Color = updateAuctionDto.Color ?? auction.Item.Color;
@@ -82,12 +86,16 @@ public class AuctionsController: ControllerBase
         return BadRequest("Problem saving changes");
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id}"), Authorize]
     public async Task<ActionResult> DeleteAuction(Guid id) {
         var auction = await _context.Auctions.FindAsync(id);
         if (auction == null) return NotFound();
 
-        //TODO: 
+        if (auction.Seller != User.Identity?.Name!)
+        {
+            return Forbid();
+        }
+        
         _context.Auctions.Remove(auction);
 
         var cahngeTracker = _context.ChangeTracker.Entries<Auction>();
