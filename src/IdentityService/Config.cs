@@ -27,6 +27,16 @@ public static class Config
                 RedirectUris = {"https://www.getpostman.com/oauth2/callback"},
                 ClientSecrets = new[] { new Secret("NotASecret".Sha512())},
                 AllowedGrantTypes = {GrantType.ResourceOwnerPassword}
+            },
+            new Client() {
+                ClientId = "nextFrontend",
+                ClientName = "nextFrontend",
+                ClientSecrets = { new Secret("secret".Sha512())},
+                AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
+                RequirePkce = true,
+                AllowOfflineAccess = true,
+                AllowedScopes = {"openid", "profile","auctionApp"},
+                AccessTokenLifetime = 3600*24
             }
         };
 }
