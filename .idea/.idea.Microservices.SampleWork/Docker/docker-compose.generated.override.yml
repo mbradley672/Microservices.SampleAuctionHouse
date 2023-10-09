@@ -1,0 +1,132 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  auctionsvc:
+    build:
+      context: "C:\\Users\\mbrad\\source\\repos\\Microservices.SampleWork"
+      dockerfile: "src/AuctionService/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "/riderDebugger/linux-x64/dotnet/dotnet"
+    - "/riderDebugger/JetBrains.Debugger.Worker.exe"
+    - "--mode=server"
+    - "--frontend-port=57100"
+    - "--backend-port=57300"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      NUGET_PACKAGES: "C:\\Users\\mbrad\\.nuget\\packages"
+      NUGET_FALLBACK_PACKAGES: "C:\\Users\\mbrad\\.nuget\\packages"
+      RIDER_DEBUGGER_LOG_DIR: "/riderLogs"
+      RESHARPER_LOG_CONF: "/riderLogsConf/backend-log.xml"
+    image: "mbradley672/auction-service:dev"
+    ports:
+    - "127.0.0.1:57012:57100"
+    - "127.0.0.1:57212:57300"
+    volumes:
+    - "C:\\Users\\mbrad\\.nuget\\packages:/root/.nuget/fallbackpackages"
+    - "C:\\Users\\mbrad\\source\\repos\\Microservices.SampleWork\\src\\AuctionService:/app:rw"
+    - "C:\\Users\\mbrad\\source\\repos\\Microservices.SampleWork:/src:rw"
+    - "C:\\Users\\mbrad\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2023.2.2\\\
+      Linux64:/riderDebugger"
+    - "C:\\Users\\mbrad\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\232.9921.83/bin:/riderLogsConf"
+    - "C:\\Users\\mbrad\\AppData\\Local\\JetBrains\\Rider2023.2\\log\\DebuggerWorker\\\
+      JetBrains.Debugger.Worker.2023_10_08_22_31_02:/riderLogs:rw"
+    working_dir: "/app"
+  gatewaysvc:
+    build:
+      context: "C:\\Users\\mbrad\\source\\repos\\Microservices.SampleWork"
+      dockerfile: "src/GatewayService/Dockerfile"
+      target: "build"
+    command: []
+    entrypoint:
+    - "/riderDebugger/linux-x64/dotnet/dotnet"
+    - "/riderDebugger/JetBrains.Debugger.Worker.exe"
+    - "--mode=server"
+    - "--frontend-port=57100"
+    - "--backend-port=57300"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      NUGET_PACKAGES: "C:\\Users\\mbrad\\.nuget\\packages"
+      NUGET_FALLBACK_PACKAGES: "C:\\Users\\mbrad\\.nuget\\packages"
+      RIDER_DEBUGGER_LOG_DIR: "/riderLogs"
+      RESHARPER_LOG_CONF: "/riderLogsConf/backend-log.xml"
+    image: "mbradley672/gateway-service:dev"
+    ports:
+    - "127.0.0.1:57013:57100"
+    - "127.0.0.1:57213:57300"
+    volumes:
+    - "C:\\Users\\mbrad\\.nuget\\packages:/root/.nuget/fallbackpackages"
+    - "C:\\Users\\mbrad\\source\\repos\\Microservices.SampleWork\\src\\GatewayService:/app:rw"
+    - "C:\\Users\\mbrad\\source\\repos\\Microservices.SampleWork:/src:rw"
+    - "C:\\Users\\mbrad\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2023.2.2\\\
+      Linux64:/riderDebugger"
+    - "C:\\Users\\mbrad\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\232.9921.83/bin:/riderLogsConf"
+    - "C:\\Users\\mbrad\\AppData\\Local\\JetBrains\\Rider2023.2\\log\\DebuggerWorker\\\
+      JetBrains.Debugger.Worker.2023_10_08_22_31_02:/riderLogs:rw"
+    working_dir: "/app"
+  identitysvc:
+    build:
+      context: "C:\\Users\\mbrad\\source\\repos\\Microservices.SampleWork"
+      dockerfile: "src/IdentityService/Dockerfile"
+      target: "build"
+    command: []
+    entrypoint:
+    - "/riderDebugger/linux-x64/dotnet/dotnet"
+    - "/riderDebugger/JetBrains.Debugger.Worker.exe"
+    - "--mode=server"
+    - "--frontend-port=57100"
+    - "--backend-port=57300"
+    environment:
+      ASPNETCORE_STATICWEBASSETS: "/app/bin/Debug/net7.0/IdentityService.staticwebassets.runtime.CT.json"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      NUGET_PACKAGES: "C:\\Users\\mbrad\\.nuget\\packages"
+      NUGET_FALLBACK_PACKAGES: "C:\\Users\\mbrad\\.nuget\\packages"
+      RIDER_DEBUGGER_LOG_DIR: "/riderLogs"
+      RESHARPER_LOG_CONF: "/riderLogsConf/backend-log.xml"
+    image: "mbradley672/identity-service:dev"
+    ports:
+    - "127.0.0.1:57014:57100"
+    - "127.0.0.1:57214:57300"
+    volumes:
+    - "C:\\Users\\mbrad\\.nuget\\packages:/root/.nuget/fallbackpackages"
+    - "C:\\Users\\mbrad\\source\\repos\\Microservices.SampleWork\\src\\IdentityService:/app:rw"
+    - "C:\\Users\\mbrad\\source\\repos\\Microservices.SampleWork:/src:rw"
+    - "C:\\Users\\mbrad\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2023.2.2\\\
+      Linux64:/riderDebugger"
+    - "C:\\Users\\mbrad\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\232.9921.83/bin:/riderLogsConf"
+    - "C:\\Users\\mbrad\\AppData\\Local\\JetBrains\\Rider2023.2\\log\\DebuggerWorker\\\
+      JetBrains.Debugger.Worker.2023_10_08_22_31_02:/riderLogs:rw"
+    working_dir: "/app"
+  searchsvc:
+    build:
+      context: "C:\\Users\\mbrad\\source\\repos\\Microservices.SampleWork"
+      dockerfile: "src/SearchService/Dockerfile"
+      target: "build"
+    command: []
+    entrypoint:
+    - "/riderDebugger/linux-x64/dotnet/dotnet"
+    - "/riderDebugger/JetBrains.Debugger.Worker.exe"
+    - "--mode=server"
+    - "--frontend-port=57100"
+    - "--backend-port=57300"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      NUGET_PACKAGES: "C:\\Users\\mbrad\\.nuget\\packages"
+      NUGET_FALLBACK_PACKAGES: "C:\\Users\\mbrad\\.nuget\\packages"
+      RIDER_DEBUGGER_LOG_DIR: "/riderLogs"
+      RESHARPER_LOG_CONF: "/riderLogsConf/backend-log.xml"
+    image: "mbradley672/search-service:dev"
+    ports:
+    - "127.0.0.1:57015:57100"
+    - "127.0.0.1:57215:57300"
+    volumes:
+    - "C:\\Users\\mbrad\\AppData\\Roaming\\Microsoft\\UserSecrets:/root/.microsoft/usersecrets"
+    - "C:\\Users\\mbrad\\.nuget\\packages:/root/.nuget/fallbackpackages"
+    - "C:\\Users\\mbrad\\source\\repos\\Microservices.SampleWork\\src\\SearchService:/app:rw"
+    - "C:\\Users\\mbrad\\source\\repos\\Microservices.SampleWork:/src:rw"
+    - "C:\\Users\\mbrad\\AppData\\Local\\JetBrains\\RiderRemoteDebugger\\2023.2.2\\\
+      Linux64:/riderDebugger"
+    - "C:\\Users\\mbrad\\AppData\\Local\\JetBrains\\Toolbox\\apps\\Rider\\ch-0\\232.9921.83/bin:/riderLogsConf"
+    - "C:\\Users\\mbrad\\AppData\\Local\\JetBrains\\Rider2023.2\\log\\DebuggerWorker\\\
+      JetBrains.Debugger.Worker.2023_10_08_22_31_02:/riderLogs:rw"
+    working_dir: "/app"
