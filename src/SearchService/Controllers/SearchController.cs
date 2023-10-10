@@ -48,8 +48,8 @@ public class SearchController: ControllerBase {
         {
             query.Match(x => x.Winner == searchParams.Winner);
         }
-        query.PageNumber(searchParams.PageNumber);
-        query.PageSize(searchParams.PageSize);
+        query.PageNumber(searchParams.PageNumber ?? 1);
+        query.PageSize(searchParams.PageSize ?? 12);
 
         var result = await query.ExecuteAsync();
         
