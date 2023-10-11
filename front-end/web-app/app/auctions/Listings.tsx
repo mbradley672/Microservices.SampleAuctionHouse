@@ -38,13 +38,13 @@ export default function Listings() {
             return (
                         <>
                             <Filters />
-                            // @ts-ignore
+                            
                             <div className={'grid grid-cols-4 gap-4'}>
                                 {data.results.map((auction) => (
                                     <AuctionCard auction={auction} key={auction.id}/>
                                 ))}
                             </div>
-                            // @ts-ignore
+                            
                             <div className={'flex justify-center mt-4'}>
                                 <AppPagination pageChanged={setPageNumber} currentPage={params.pageNumber} pageCount={data.pageCount}/>
                             </div>

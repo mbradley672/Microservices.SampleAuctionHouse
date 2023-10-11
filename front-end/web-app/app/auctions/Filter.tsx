@@ -1,4 +1,5 @@
-﻿import ButtonGroup from "flowbite-react/lib/esm/components/Button/ButtonGroup";
+﻿'use client'
+
 import {Button} from "flowbite-react";
 import {useParamsStore} from "@/hooks/useParamsStore";
 
@@ -17,7 +18,7 @@ export default function Filters(){
             <div className={'flex justify-between items-center mb-4'}>
                 <div>
                     <span className={'uppercase text-sm text-gray-500 mr-2'}>Page Size</span>
-                    <ButtonGroup>
+                    <Button.Group outline>
                         {pageSizeSelections.map((value, i)=> {
                             return <Button key={i} 
                                     onClick={()=> setParams({pageSize: value})} 
@@ -26,7 +27,7 @@ export default function Filters(){
                                 {value}
                             </Button>
                         })}
-                    </ButtonGroup>
+                    </Button.Group>
                 </div>
             </div>
         </>

@@ -15,7 +15,7 @@ export default function AppPagination({currentPage, pageCount, pageChanged}:Prop
         <Pagination
             currentPage={currentPage}
             onPageChange={e=>pageChanged(e)}
-            showIcons={true}
+            showIcons={false}
             layout={"pagination"}
             totalPages={pageCount}
             className={'text-blue-500 mb-5'}
