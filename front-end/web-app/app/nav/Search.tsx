@@ -6,19 +6,21 @@ import {useParamsStore} from "@/hooks/useParamsStore";
 
 export default function Search() {
     const setParams = useParamsStore(st =>st.setParams)
-    const [value, setValue] = useState('');
+    const setSearchValue = useParamsStore(st => st.setSearchValue)
+    const searchValue = useParamsStore(st => st.searchValue)
     
     function onChange(event: any) {
-        setValue(event.target.values)
+        setSearchValue(event.target.values)
     }
     
     function search(){
-        setParams({searchTerm: value})
+        setParams({searchTerm: searchValue})
     }
     
     return (<>
         <div className={'flex w-[50%] items-center border-2 rounded-full py-2 shadow-sm bg-white border-amber-300'} suppressHydrationWarning>
             <input type="text" placeholder='Search for cars by make, model or color' onChange={onChange} data-lpignore suppressHydrationWarning
+                   value={searchValue}
                    onKeyDown={(e:any)=> {
                        if(e.key === 'Enter') search()
                    }}
