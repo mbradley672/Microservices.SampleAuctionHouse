@@ -13,7 +13,7 @@ namespace AuctionService.Data.Migrations
 {
     [DbContext(typeof(AuctionDbContext))]
     [Migration("20231007035235_outbox")]
-    partial class outbox
+    partial class Outbox
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

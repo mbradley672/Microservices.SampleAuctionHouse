@@ -1,13 +1,13 @@
-﻿using MassTransit;
+﻿using Contracts.Contracts;
+using MassTransit;
 using MongoDB.Entities;
 using SearchService.Entities;
 
 namespace SearchService.Consumers;
 
 public class AuctionDeletedConsumer : IConsumer<AuctionDeleted> {
-    public AuctionDeletedConsumer() {
-            
-    }
+    public AuctionDeletedConsumer() { }
+
     public async Task Consume(ConsumeContext<AuctionDeleted> context) {
         Console.WriteLine("--> Consuming AuctionDeleted: " + context.Message.Id);
         var result = await DB.DeleteAsync<Item>(context.Message.Id);

@@ -9,13 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
-using SearchService.Consumers;
 
 namespace AuctionService.Controllers;
 
 [ApiController, Route("api/auctions")]
-public class AuctionsController: ControllerBase
-{
+public class AuctionsController : ControllerBase {
     private readonly AuctionDbContext _context;
     private readonly IMapper _mapper;
     private readonly IPublishEndpoint _publishEndpoint;
@@ -33,7 +31,7 @@ public class AuctionsController: ControllerBase
         return _mapper.Map<List<AuctionDto>>(auctions);
     }
 
-    [HttpGet("{id}"),AllowAnonymous]
+    [HttpGet("{id}"), AllowAnonymous]
     public async Task<ActionResult<AuctionDto>> GetAuctionById(Guid id) {
         var auction = await _context.Auctions.Include(x => x.Item).SingleOrDefaultAsync(x => x.Id == id);
 
@@ -54,12 +52,11 @@ public class AuctionsController: ControllerBase
 
         var result = await _context.SaveChangesAsync() > 0;
 
-        
 
-        if(!result) return BadRequest("Cannot save changes to DB");
+        if (!result) return BadRequest("Cannot save changes to DB");
 
         return CreatedAtAction(nameof(GetAuctionById),
-                new { auction.Id }, mappedAuction);
+            new { auction.Id }, mappedAuction);
     }
 
     [HttpPut("{id}"), Authorize]
@@ -95,14 +92,15 @@ public class AuctionsController: ControllerBase
         {
             return Forbid();
         }
-        
+
         _context.Auctions.Remove(auction);
 
         var cahngeTracker = _context.ChangeTracker.Entries<Auction>();
-        if (cahngeTracker.SingleOrDefault(x=>auction != null && x.Entity.Id == auction.Id)!.State == EntityState.Deleted)
+        if (cahngeTracker.SingleOrDefault(x => auction != null && x.Entity.Id == auction.Id)!.State ==
+            EntityState.Deleted)
         {
             var mappedAuction = _mapper.Map<AuctionDto>(auction);
-            await _publishEndpoint.Publish<AuctionDeleted>(new {Id = auction.Id.ToString()});
+            await _publishEndpoint.Publish<AuctionDeleted>(new { Id = auction.Id.ToString() });
         }
 
         var result = await _context.SaveChangesAsync() > 0;

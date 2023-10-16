@@ -4,20 +4,17 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace AuctionService.Data.Migrations
-{
+namespace AuctionService.Data.Migrations {
     /// <inheritdoc />
-    public partial class outbox : Migration
-    {
+    public partial class Outbox : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.CreateTable(
                 name: "InboxState",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                              .Annotation("Npgsql:ValueGenerationStrategy",
+                                  NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     MessageId = table.Column<Guid>(type: "uuid", nullable: false),
                     ConsumerId = table.Column<Guid>(type: "uuid", nullable: false),
                     LockId = table.Column<Guid>(type: "uuid", nullable: false),
@@ -29,18 +26,18 @@ namespace AuctionService.Data.Migrations
                     Delivered = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     LastSequenceNumber = table.Column<long>(type: "bigint", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_InboxState", x => x.Id);
-                    table.UniqueConstraint("AK_InboxState_MessageId_ConsumerId", x => new { x.MessageId, x.ConsumerId });
+                    table.UniqueConstraint("AK_InboxState_MessageId_ConsumerId",
+                        x => new { x.MessageId, x.ConsumerId });
                 });
 
             migrationBuilder.CreateTable(
                 name: "OutboxMessage",
-                columns: table => new
-                {
+                columns: table => new {
                     SequenceNumber = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                                          .Annotation("Npgsql:ValueGenerationStrategy",
+                                              NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     EnqueueTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     SentTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Headers = table.Column<string>(type: "text", nullable: true),
@@ -56,21 +53,20 @@ namespace AuctionService.Data.Migrations
                     CorrelationId = table.Column<Guid>(type: "uuid", nullable: true),
                     InitiatorId = table.Column<Guid>(type: "uuid", nullable: true),
                     RequestId = table.Column<Guid>(type: "uuid", nullable: true),
-                    SourceAddress = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    DestinationAddress = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    ResponseAddress = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    SourceAddress =
+                        table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    DestinationAddress =
+                        table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    ResponseAddress =
+                        table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     FaultAddress = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     ExpirationTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OutboxMessage", x => x.SequenceNumber);
-                });
+                constraints: table => { table.PrimaryKey("PK_OutboxMessage", x => x.SequenceNumber); });
 
             migrationBuilder.CreateTable(
                 name: "OutboxState",
-                columns: table => new
-                {
+                columns: table => new {
                     OutboxId = table.Column<Guid>(type: "uuid", nullable: false),
                     LockId = table.Column<Guid>(type: "uuid", nullable: false),
                     RowVersion = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true),
@@ -78,10 +74,7 @@ namespace AuctionService.Data.Migrations
                     Delivered = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     LastSequenceNumber = table.Column<long>(type: "bigint", nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OutboxState", x => x.OutboxId);
-                });
+                constraints: table => { table.PrimaryKey("PK_OutboxState", x => x.OutboxId); });
 
             migrationBuilder.CreateIndex(
                 name: "IX_InboxState_Delivered",
@@ -117,8 +110,7 @@ namespace AuctionService.Data.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropTable(
                 name: "InboxState");
 

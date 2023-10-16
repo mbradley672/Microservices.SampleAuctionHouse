@@ -1,15 +1,15 @@
 ﻿using Contracts.Contracts;
 using MassTransit;
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+
 namespace AuctionService.Consumers {
-    public class AuctionCreateFaultConsumer: IConsumer<Fault<AuctionCreatedContract>> {
+    public abstract class AuctionCreateFaultConsumer : IConsumer<Fault<AuctionCreatedContract>> {
         public async Task Consume(ConsumeContext<Fault<AuctionCreatedContract>> context) {
             Console.WriteLine("--> Fault Detected Consuming faulty creation");
             var exception = context.Message.Exceptions.First();
             if (exception.ExceptionType == "System.ArgumentException")
-            {
-                
-            }
+            { }
             else
             {
                 //TODO: Expand upon error catching.
