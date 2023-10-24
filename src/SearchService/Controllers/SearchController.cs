@@ -17,7 +17,7 @@ public class SearchController : ControllerBase {
         //var test = await query.ExecuteAsync();
 
         query = searchParams.OrderBy switch {
-            "make" => query.Sort(x => x.Ascending(c => c.Make)),
+            "make" => query.Sort(x => x.Ascending(c => c.Make)).Sort(x=>x.Ascending(a=>a.Model)),
             "new" => query.Sort(x => x.Descending(a => a.CreatedAt)),
             _ => query.Sort(x => x.Ascending(a => a.AuctionEnd))
         };

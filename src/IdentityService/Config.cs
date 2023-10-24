@@ -36,7 +36,9 @@ public static class Config
                 RequirePkce = true,
                 AllowOfflineAccess = true,
                 AllowedScopes = {"openid", "profile","auctionApp"},
-                AccessTokenLifetime = 3600*24
+                RedirectUris = {"http://localhost:3000/api/auth/callback/id-server"},
+                AccessTokenLifetime = 3600*24,
+                AlwaysIncludeUserClaimsInIdToken = true
             }
         };
 }

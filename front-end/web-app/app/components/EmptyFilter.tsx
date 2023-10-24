@@ -1,18 +1,25 @@
-﻿import React from 'react'
+﻿'use client'
+
+import React from 'react'
 import Heading from "@/app/components/Heading";
 import {Button} from "flowbite-react";
 import {useParamsStore} from "@/hooks/useParamsStore";
+import {signIn} from "next-auth/react";
 
 type Props = {
     title?: string,
     subtitle?: string,
-    showReset?: boolean
+    showReset?: boolean,
+    showSignin?: boolean,
+    callbackUrl?: string
 }
 
 export default ({
                     title = 'No Results',
                     subtitle = 'Please try changing your filters',
-                    showReset = true
+                    showReset,
+                    showSignin,
+                    callbackUrl
                 }: Props) => {
     const reset = useParamsStore(st => st.reset)
     return (
@@ -24,6 +31,7 @@ export default ({
                     {showReset && (
                         <Button outline onClick={reset}>Remove Filter</Button>
                     )}
+                    {showSignin && (<Button outline onClick={() => signIn('id-server', {callbackUrl})}>Sign In</Button> )}
                 </div>
             </div>
         </>

@@ -76,7 +76,8 @@ services:
       - ASPNETCORE_URLS=http://+:80
     ports:
       - 6001:80
+
 volumes:
   pgdata:    
-  mongodata:  
+  mongodata:
     
