@@ -28,7 +28,7 @@ jobs:
         local-dir: "./"
         server-dir: "/var/www/bradleyshome.us/"
         secruity: loose
-        protocol: ftps
+        protocol: ftp
 
     - name: Executing remote command
       uses: appleboy/ssh-action@master
