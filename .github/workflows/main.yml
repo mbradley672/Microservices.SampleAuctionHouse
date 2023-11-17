@@ -15,8 +15,9 @@ jobs:
       id: compress
       with: 
         command: c
-        cwd: .
+        cwd: ./
         outPath: file.tar
+        files: ./
 
     - name: Copy files to server
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
