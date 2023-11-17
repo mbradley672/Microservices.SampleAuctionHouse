@@ -3,22 +3,31 @@ name: Deploy
 on: [push]
 
 jobs:
-  build:
+  upload:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v1
 
-    - name: Copy repository contents via scp
-      uses: appleboy/scp-action@master
+    - name: Compress Repository
+      uses: a7ul/tar-action@v1.1.3
+      id: compress
+      with: 
+        command: c
+        cwd: .
+        outPath: file.tar
+
+    - name: Copy files to server
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
-        port: ${{ secrets.PORT }}
-        source: "."
-        target: "/var/www/bradleyshome.us"
+        local-dir: "."
+        server-dir: "/var/www/bradleyshome.us"
+        secruity: loose
+        protocol: ftps
 
     - name: Executing remote command
       uses: appleboy/ssh-action@master
@@ -27,4 +36,6 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: docker compose up -d
+        script: | 
+          cd /var/www/bradleyshome.us
+          tar -xf file.tar
