@@ -16,7 +16,7 @@ jobs:
         with: 
           command: c
           cwd: ./
-          outPath: ./output/file.tar
+          outPath: './output/file.tar'
           files: ./
 
       - name: Copy files to server
@@ -29,6 +29,7 @@ jobs:
           onlyNewer: false
           localDir: './output/'
           remoteDir: '/var/www/bradleyshome.us/' 
+
           options: '--verbose'
 
       - name: Executing remote command
