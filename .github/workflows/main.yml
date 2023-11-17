@@ -7,12 +7,24 @@ on:
 
 jobs:
   Deploy-Containers:
+  Deploy-Containers:
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     if: github.event_name == 'push'
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+      - name: Checkout
+        uses: actions/checkout@v1
 
+      - name: Compress Repository
+        uses: a7ul/tar-action@v1.1.3
+        id: compress
+        with: 
+          command: c
+          cwd: ./
+          outPath: file.tar
+          files: ./
       - name: Compress Repository
         uses: a7ul/tar-action@v1.1.3
         id: compress
@@ -33,7 +45,28 @@ jobs:
           localDir: './'
           remoteDir: '/var/www/bradleyshome.us' 
           options: '--verbose'
+      - name: Copy files to server
+        uses: pressidium/lftp-mirror-action@v1
+        with:
+          host: ${{ secrets.HOST }}
+          user: ${{ secrets.USERNAME }}
+          pass: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          onlyNewer: false
+          localDir: './'
+          remoteDir: '/var/www/bradleyshome.us' 
+          options: '--verbose'
 
+      - name: Executing remote command
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: | 
+            cd /var/www/bradleyshome.us
+            tar -xf file.tar
       - name: Executing remote command
         uses: appleboy/ssh-action@master
         with:
