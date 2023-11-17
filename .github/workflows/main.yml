@@ -16,7 +16,7 @@ jobs:
         with: 
           command: c
           cwd: ./
-          outPath: file.tar
+          outPath: ./output/file.tar
           files: ./
 
       - name: Copy files to server
@@ -27,7 +27,7 @@ jobs:
           pass: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           onlyNewer: false
-          localDir: './'
+          localDir: './output'
           remoteDir: '/var/www/bradleyshome.us' 
           options: '--verbose'
 
@@ -41,4 +41,3 @@ jobs:
           script: | 
             cd /var/www/bradleyshome.us
             tar -xf file.tar
-            
