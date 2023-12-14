@@ -5,13 +5,13 @@ using MongoDB.Entities;
 using SearchService.Entities;
 
 namespace SearchService.Consumers {
-    public class AuctionCreatedConsumer : IConsumer<AuctionCreatedContract> {
+    public class AuctionCreatedConsumer : IConsumer<AuctionCreated> {
         private readonly IMapper _mapper;
 
         public AuctionCreatedConsumer(IMapper mapper) {
             _mapper = mapper;
         }
-        public async Task Consume(ConsumeContext<AuctionCreatedContract> context) {
+        public async Task Consume(ConsumeContext<AuctionCreated> context) {
             Console.WriteLine("--> consuming AuctionCreatedContract: " + context.Message.Id);
 
             var item = _mapper.Map<Item>(context.Message);

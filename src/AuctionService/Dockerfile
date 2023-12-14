@@ -15,6 +15,7 @@ COPY src/SearchService/SearchService.csproj src/SearchService/
 COPY src/GatewayService/GatewayService.csproj src/GatewayService/
 COPY src/Contracts/Contracts.csproj src/Contracts/
 COPY src/IdentityService/IdentityService.csproj src/IdentityService/
+COPY src/BiddingService/BiddingService.csproj src/BiddingService/
 
 # NuGet Restore
 RUN dotnet restore ./Microservices.SampleWork.sln

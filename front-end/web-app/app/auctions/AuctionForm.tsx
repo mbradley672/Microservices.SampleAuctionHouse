@@ -1,53 +1,101 @@
 ﻿'use client'
 
-import React, {useEffect} from 'react'
-import {FieldValue, FieldValues, useForm} from "react-hook-form";
-import {Button, TextInput} from "flowbite-react";
+import { Button, TextInput } from 'flowbite-react';
+import React, { useEffect } from 'react'
+
+import { FieldValues, useForm } from 'react-hook-form'
+import { createAuction, updateAuction } from '../actions/auctionActions';
+import { usePathname, useRouter } from 'next/navigation';
+import { toast } from 'react-hot-toast';
+import { Auction } from '@/types';
 import CustomInput from "@/app/components/CustomInput";
 import CustomDateInput from "@/app/components/CustomDateInput";
 
-export default function AuctionForm() {
-    const {control, register, handleSubmit, setFocus, 
-        formState: {isSubmitting, isValid, isDirty, errors}} = useForm({
+type Props = {
+    auction?: Auction
+}
+
+export default function AuctionForm({ auction }: Props) {
+    const router = useRouter();
+    const pathname = usePathname();
+    const { control, handleSubmit, setFocus, reset,
+        formState: { isSubmitting, isValid } } = useForm({
         mode: 'onTouched'
     });
-    
-    useEffect(()=> {
-        setFocus('make')
+
+    useEffect(() => {
+        if (auction) {
+            const { make, model, color, mileage, year } = auction;
+            reset({ make, model, color, mileage, year });
+        }
+        setFocus('make');
     }, [setFocus])
 
-    function onSubmit(data: FieldValues) {
-        console.log(data)
+    async function onSubmit(data: FieldValues) {
+        try {
+            let id = '';
+            let res;
+            if (pathname === '/auctions/create') {
+                res = await createAuction(data);
+                id = res.id;
+            } else {
+                if (auction) {
+                    res = await updateAuction(data, auction.id);
+                    id = auction.id;
+                }
+            }
+            if (res.error) {
+                throw res.error;
+            }
+            router.push(`/auctions/details/${id}`)
+        } catch (error: any) {
+            toast.error(error.status + ' ' + error.message)
+        }
     }
-    
+
     return (
-        <form className={'flex flex-col mt-3'} onSubmit={handleSubmit(onSubmit)}>
-            <CustomInput label={'Make'} name={'make'} control={control} 
-                         rules={{required: 'Make is required'}} />
-            <CustomInput label={'Model'} name={'model'} control={control} 
-                         rules={{required: 'Model is required'}} />
-            <CustomInput label={'Color'} name={'color'} control={control} 
-                         rules={{required: 'Color is required'}} />
-            <div className="grid grid-cols-2 gap-3">
-                <CustomInput label={'Year'} name={'year'} control={control} 
-                             rules={{required: 'Year is required'}} type={'number'} />
-                <CustomInput label={'Mileage'} name={'mileage'} control={control} 
-                             rules={{required: 'Mileage is required'}} type={'number'} />
+        <form className='flex flex-col mt-3' onSubmit={handleSubmit(onSubmit)}>
+            <CustomInput label='Make' name='make' control={control}
+                   rules={{ required: 'Make is required' }} />
+            <CustomInput label='Model' name='model' control={control}
+                   rules={{ required: 'Model is required' }} />
+            <CustomInput label='Color' name='color' control={control}
+                   rules={{ required: 'Color is required' }} />
+
+            <div className='grid grid-cols-2 gap-3'>
+                <CustomInput label='Year' name='year' control={control} type='number'
+                       rules={{ required: 'Year is required' }} />
+                <CustomInput label='Mileage' name='mileage' control={control} type='number'
+                       rules={{ required: 'Model is required' }} />
             </div>
-            <CustomInput label={'Image Url'} name={'imageUrl'} control={control} 
-                         rules={{required: 'Url is required'}}/>
-            <div className="grid grid-cols-2 gap-3">
-                <CustomInput label={'Reserve Price'} name={'reservePrice'} control={control} 
-                             rules={{required: 'Reserve Price is required'}} type={'number'} />
-                <CustomDateInput label={'Auction End Date'} name={'mileage'} control={control} 
-                                 rules={{required: 'Auction End Date is required'}} 
-                                 dateFormat={'dd MMMM yyyy h:mm a'} showTimeSelect />
-            </div>
-            <div className="flex justify-between">
-                <Button outline color={'gray'}>Cancel</Button>
-                <Button isProcessing={isSubmitting} 
-                        disabled={!isValid} type={'submit'}
-                        outline color={'success'}>Submit</Button>
+
+            {pathname === '/auctions/create' &&
+                <>
+                    <CustomInput label='Image URL' name='imageUrl' control={control}
+                           rules={{ required: 'Image URL is required' }} />
+
+                    <div className='grid grid-cols-2 gap-3'>
+                        <CustomInput label='Reserve Price (enter 0 if no reserve)'
+                               name='reservePrice' control={control} type='number'
+                               rules={{ required: 'Reserve price is required' }} />
+                        <CustomDateInput
+                            label='Auction end date/time'
+                            name='auctionEnd'
+                            control={control}
+                            dateFormat='dd MMMM yyyy h:mm a'
+                            showTimeSelect
+                            rules={{ required: 'Auction end date is required' }} />
+                    </div>
+                </>}
+
+
+            <div className='flex justify-between'>
+                <Button outline color='gray'>Cancel</Button>
+                <Button
+                    isProcessing={isSubmitting}
+                    disabled={!isValid}
+                    type='submit'
+                    outline color='success'>Submit</Button>
             </div>
         </form>
     )

@@ -48,7 +48,7 @@ public class AuctionsController : ControllerBase {
 
         _context.Auctions.Add(auction);
         var mappedAuction = _mapper.Map<AuctionDto>(auction);
-        await _publishEndpoint.Publish(_mapper.Map<AuctionCreatedContract>(mappedAuction));
+        await _publishEndpoint.Publish(_mapper.Map<AuctionCreated>(mappedAuction));
 
         var result = await _context.SaveChangesAsync() > 0;
 
