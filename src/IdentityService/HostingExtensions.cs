@@ -75,7 +75,8 @@ internal static class HostingExtensions
         {
             app.UseDeveloperExceptionPage();
         }
-
+        //app.usehttpsredirection();
+        
         app.UseStaticFiles();
         app.UseRouting();
         app.UseIdentityServer();

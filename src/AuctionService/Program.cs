@@ -2,6 +2,7 @@
 using AuctionService.Consumers;
 using AuctionService.Data;
 using AuctionService.Entities;
+using AuctionService.Services;
 using Microsoft.EntityFrameworkCore;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,7 +16,7 @@ namespace AuctionService
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
+            builder.Services.AddGrpc();
             builder.Services.AddDbContext<AuctionDbContext>(options =>
             {
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -53,6 +54,8 @@ namespace AuctionService
 
             var app = builder.Build();
 
+            app.MapGrpcService<GrpcAuctionService>();
+            
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -60,7 +63,7 @@ namespace AuctionService
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            //app.usehttpsredirection();
 
             app.UseAuthentication();
             app.UseAuthorization();

@@ -32,6 +32,7 @@ builder.Services.AddMassTransit(x => {
 builder.Services.AddHostedService<CheckAuctionFinished>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<GrpcAuctionClient>();
 
 var app = builder.Build();
 
@@ -40,7 +41,8 @@ if (app.Environment.IsDevelopment())
 {
     
 }
- 
+
+//app.usehttpsredirection();
 app.UseAuthorization();
 app.MapControllers();
 

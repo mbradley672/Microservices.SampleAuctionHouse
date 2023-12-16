@@ -11,7 +11,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
            options.TokenValidationParameters.NameClaimType = "username";
        });
 var app = builder.Build();
-
+//app.usehttpsredirection();
 app.MapReverseProxy();
 
 app.UseAuthentication();

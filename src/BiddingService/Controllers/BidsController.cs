@@ -2,6 +2,7 @@
 using AutoMapper;
 using BiddingService.DTOs;
 using BiddingService.Models;
+using BiddingService.Services;
 using Contracts.Contracts;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
@@ -11,11 +12,18 @@ using MongoDB.Entities;
 namespace BiddingService.Controllers;
 
 [ApiController, Route("api/[controller]")]
-public class BidsController(IMapper mapper, IPublishEndpoint publishEndpoint) : ControllerBase {
+public class BidsController(IMapper mapper, IPublishEndpoint publishEndpoint, GrpcAuctionClient grpcClient) : ControllerBase {
     [Authorize, HttpPost]
     public async Task<ActionResult<BidDto>> PlaceBid(string auctionId, int amount) {
         var auction = await DB.Find<Auction>().OneAsync(auctionId);
-        if (auction == null) return NotFound(); // TODO: Check with auction service if it has the auction
+        if (auction == null)
+        {
+            auction = grpcClient.GetAuction(auctionId);
+            if (auction == null)
+            {
+                return BadRequest("Cannot accept bids on the auction at this time");
+            }
+        }
 
         if (auction.Seller == User.Identity.Name)
         {
@@ -60,7 +68,14 @@ public class BidsController(IMapper mapper, IPublishEndpoint publishEndpoint) : 
     [HttpGet("{auctionId}")]
     public async Task<ActionResult<IEnumerable<BidDto>>> GetBidsForAuction(string auctionId) {
         var auction = await DB.Find<Auction>().OneAsync(auctionId);
-        if (auction == null) return NotFound(); // TODO: Check with auction service if it has the auction
+        if (auction == null)
+        {
+            auction = grpcClient.GetAuction(auctionId);
+            if (auction == null)
+            {
+                return BadRequest("Cannot get bids on the auction at this time");
+            }
+        }
 
         var bids = await DB.Find<Bid>()
                            .Match(b => b.AuctionId == auctionId)
