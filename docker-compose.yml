@@ -123,6 +123,23 @@ services:
     depends_on:
       - mongodb
       - rabbitmq
+  notifysvc:
+    image: mbradley672/notify-service:latest
+    build:
+      context: .
+      dockerfile: src/NotificationService/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80;https://+:443
+      - RabbitMq__Host=rabbitmq
+      - Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - Kestrel__Certificates__Default__Password=Pass123$
+    volumes:
+      - "~/.aspnet/https:/https/"
+    ports:
+      - 7004:80 
+    depends_on: 
+      - rabbitmq
 
 volumes:
   pgdata:    

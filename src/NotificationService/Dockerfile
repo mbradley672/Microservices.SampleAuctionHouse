@@ -1,23 +1,32 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER app
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["NotificationService/NotificationService.csproj", "NotificationService/"]
-RUN dotnet restore "./NotificationService/./NotificationService.csproj"
-COPY . .
-WORKDIR "/src/NotificationService"
-RUN dotnet build "./NotificationService.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+# Lets get all the project files
+COPY Microservices.SampleWork.sln Microservices.SampleWork.sln
+COPY src/AuctionService/AuctionService.csproj src/AuctionService/
+COPY src/SearchService/SearchService.csproj src/SearchService/
+COPY src/GatewayService/GatewayService.csproj src/GatewayService/
+COPY src/Contracts/Contracts.csproj src/Contracts/
+COPY src/IdentityService/IdentityService.csproj src/IdentityService/
+COPY src/BiddingService/BiddingService.csproj src/BiddingService/
+COPY src/NotificationService/NotificationService.csproj src/NotificationService/
+
+# NuGet Restore
+RUN dotnet restore ./Microservices.SampleWork.sln
+
+# Copy app folders
+COPY . ./
 
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./NotificationService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+RUN dotnet publish -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
