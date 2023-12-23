@@ -1,5 +1,6 @@
 
 using MassTransit;
+using SearchService;
 using SearchService.Consumers;
 using SearchService.Data;
 
